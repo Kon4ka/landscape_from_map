@@ -7,7 +7,7 @@ Open-Elevation (https://api.open-elevation.com/) ‒ бесплатный REST-�
 import json, urllib.parse, urllib.request
 import numpy as np
 
-def fetch_dem(lat_c, lon_c, side_m=1000, samples=50):
+def fetch_dem(lat_c, lon_c, side_m=10, samples=50):
     """
     Возвращает np.float32[samples×samples] ‒ высоты в метрах относительно MSL.
     lat_c / lon_c  – центр прямоугольника; сетка квадратная `side_m`.

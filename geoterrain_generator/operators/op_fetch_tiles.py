@@ -36,6 +36,9 @@ class OP_OT_fetch_tiles(bpy.types.Operator):
         img.name = "GeoTG_Ortho"          # ← добавьте
         context.scene["geotg_lat"] = self.lat
         context.scene["geotg_lon"] = self.lon
+        ratio = fetch_image(self.lat, self.lon, self.zoom,
+                    prefs.provider, prefs.api_key, out_file)
+        context.scene["geotg_ratio"] = ratio
         if context.area.type == 'IMAGE_EDITOR':
             context.area.spaces.active.image = img
         self.report({'INFO'}, f"Saved {out_file}")

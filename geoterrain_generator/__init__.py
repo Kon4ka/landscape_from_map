@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Geo-Terrain Generator",
     "author": "Your Name",
-    "version": (0, 1, 0),
+    "version": (0, 1, 0.001),
     "blender": (4, 0, 0),
     "location": "File > Import > Geo-Terrain",
     "description": "Generate small-area terrain from satellite imagery",
