@@ -11,3 +11,9 @@ venv/
 
 # Игнорировать файлы окружения с секретами
 .env
+
+scanner.py
+scan.txt
+
+
+GeoCashe

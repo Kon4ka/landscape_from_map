@@ -16,15 +16,17 @@ import bpy
 from .prefs                  import GeoTG_Preferences
 from .operators.op_fetch_tiles import OP_OT_fetch_tiles
 from .ui.panel_main            import GEOTG_PT_main_panel
+from .operators.op_build_height  import OP_OT_build_height
 
 # ──────────────────────────────────────────────
 # 2.  Список классов для регистрации
 # ──────────────────────────────────────────────
-classes = (
-    GeoTG_Preferences,
-    OP_OT_fetch_tiles,
-    GEOTG_PT_main_panel,
-)
+...
+classes = (GeoTG_Preferences,
+           OP_OT_fetch_tiles,
+           OP_OT_build_height,      # ← новая строка
+           GEOTG_PT_main_panel)
+
 
 def register():
     for cls in classes:

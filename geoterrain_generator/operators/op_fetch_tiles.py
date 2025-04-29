@@ -33,6 +33,9 @@ class OP_OT_fetch_tiles(bpy.types.Operator):
             return {'CANCELLED'}
 
         img = bpy.data.images.load(out_file, check_existing=True)
+        img.name = "GeoTG_Ortho"          # ← добавьте
+        context.scene["geotg_lat"] = self.lat
+        context.scene["geotg_lon"] = self.lon
         if context.area.type == 'IMAGE_EDITOR':
             context.area.spaces.active.image = img
         self.report({'INFO'}, f"Saved {out_file}")

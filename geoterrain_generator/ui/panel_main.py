@@ -9,5 +9,8 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.operator("geotg.fetch_tile")
+        layout.operator("geotg.build_height")
+
+        
 
 # panneau должен быть указан в classes (__init__.py)
