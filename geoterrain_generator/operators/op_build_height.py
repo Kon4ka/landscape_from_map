@@ -1,7 +1,7 @@
 import bpy, bmesh, numpy as np
-from mathutils import Matrix, Vector 
+from mathutils import Matrix 
 from ..core.dem import fetch_dem
-from ..operators.op_fetch_tiles import ADDON_ID
+ADDON_ID = __name__.split('.')[0]
 
 BLENDER_SCALE = 100.0          # 1 Bu → 100 реальных метров
 SIDE_REAL_M   = 400.0          # реальная высота участка в метрах
@@ -64,10 +64,10 @@ class OP_OT_build_height(bpy.types.Operator):
         if img:
             # Упрощённый planar-UV на XY
             uv_lay = mesh.uv_layers.new(name="GeoTG_UV")
-            w, h   = size_x, size_y
+            w, h   = side_x, side_y
             for loop in mesh.loops:
                 v = mesh.vertices[loop.vertex_index].co
-                uv.data[loop.index].uv = ((v.x/bu_x)+0.5, (v.y/bu_y)+0.5)
+                uv_lay.data[loop.index].uv = ((v.x/bu_x)+0.5, (v.y/bu_y)+0.5)
 
             mat = bpy.data.materials.new("GeoTG_Mat")
             mat.use_nodes = True

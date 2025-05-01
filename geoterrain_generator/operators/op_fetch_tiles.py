@@ -1,7 +1,7 @@
 import bpy, os
 from ..core.tiles import fetch_image
 
-ADDON_ID = "geoterrain_generator"
+ADDON_ID = __name__.split('.')[0]
 
 class OP_OT_fetch_tiles(bpy.types.Operator):
     bl_idname = "geotg.fetch_tile"
@@ -36,9 +36,7 @@ class OP_OT_fetch_tiles(bpy.types.Operator):
         img.name = "GeoTG_Ortho"          # ← добавьте
         context.scene["geotg_lat"] = self.lat
         context.scene["geotg_lon"] = self.lon
-        ratio = fetch_image(self.lat, self.lon, self.zoom,
-                    prefs.provider, prefs.api_key, out_file)
-        context.scene["geotg_ratio"] = ratio
+        context.scene["geotg_ratio"] = img.size[0]/img.size[1]
         if context.area.type == 'IMAGE_EDITOR':
             context.area.spaces.active.image = img
         self.report({'INFO'}, f"Saved {out_file}")
