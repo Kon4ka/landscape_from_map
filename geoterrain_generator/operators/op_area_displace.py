@@ -1,4 +1,5 @@
 import bpy, bmesh
+import math
 from bpy.props import FloatProperty, BoolProperty
 from geoterrain_generator.operators.op_build_height import BLENDER_SCALE
 from ..core.dem import fetch_dem
@@ -21,9 +22,8 @@ class OP_OT_displace_area(bpy.types.Operator):
 
     def execute(self, context):
         obj = context.active_object
-        if not obj or obj.name != "GeoTerrainGrid":
-            self.report({'ERROR'},
-                        "Выберите сетку, созданную командой Load Area")
+        if not obj or obj.name.split('.')[0] != "GeoTerrainGrid":
+            self.report({'ERROR'}, "Select the grid created by 'Load Area'")
             return {'CANCELLED'}
 
         prefs  = context.preferences.addons[ADDON_ID].preferences
@@ -31,32 +31,47 @@ class OP_OT_displace_area(bpy.types.Operator):
         lon_c  = 0.5 * (prefs.lon1 + prefs.lon2)
         side_m = context.scene.get("geotg_side_m_avg", 400.0)
 
-        # число вершин по одной стороне
-        verts_side = round(len(obj.data.vertices) ** 0.5)
+        verts = obj.data.vertices
+        xs = sorted({round(v.co.x, 7) for v in verts})
+        ys = sorted({round(v.co.y, 7) for v in verts})
+        cols, rows = len(xs), len(ys)
+        samples = max(cols, rows)      
 
-        # запрашиваем DEM
-        dem = fetch_dem(lat_c, lon_c,
-                        side_m=side_m,
-                        samples=verts_side).astype(float)
-        z_min, z_max = dem.min(), dem.max()
+        try:
+            dem   = fetch_dem(lat_c, lon_c,
+                  side_m=side_m,
+                  samples=samples).astype(float)
+        except Exception as e:
+            self.report({'ERROR'}, f"DEM download failed: {e}")
+            return {'CANCELLED'}
 
-        # коэффициент: метры → BU
+        z_min, z_max = float(dem.min()), float(dem.max())
+        if z_max == z_min:
+            self.report({'WARNING'}, "DEM returned a flat tile; mesh left unchanged")
+            return {'CANCELLED'}
+
         m2bu = self.exaggeration / BLENDER_SCALE
 
-        bm = bmesh.new(); bm.from_mesh(obj.data)
-        bm.verts.ensure_lookup_table()
+        if obj.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
 
-        for idx, v in enumerate(bm.verts):
-            x = idx % verts_side
-            y = idx // verts_side
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
 
-            # абсолютная высота относительно выбранного «нуля»
-            elev = dem[y, x] - (z_min if self.center_to_zero else 0.0)
+        for vidx, v in enumerate(bm.verts):
+            row = vidx // cols
+            col = vidx %  cols
+            elev = dem[min(row, dem.shape[0]-1),
+                    min(col, dem.shape[1]-1)]
+            if self.center_to_zero:
+                elev -= z_min
             v.co.z = elev * m2bu
 
-        bm.to_mesh(obj.data); bm.free()
+        bm.to_mesh(obj.data)
+        bm.free()
+        obj.data.update()                                 
 
-        # переключаем просмотр на Material, чтобы увидеть рельеф с текстурой
+        # switch viewport shading so the texture + relief are visible
         for area in context.screen.areas:
             if area.type == 'VIEW_3D':
                 for space in area.spaces:
@@ -65,6 +80,5 @@ class OP_OT_displace_area(bpy.types.Operator):
                         break
 
         self.report({'INFO'},
-                    f"Displace applied (Δ={z_max - z_min:.1f} m, "
-                    f"ex×{self.exaggeration})")
+            f"Displace ok (Δ {z_max - z_min:.1f} m, exaggeration ×{self.exaggeration})")
         return {'FINISHED'}

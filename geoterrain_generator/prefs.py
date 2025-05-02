@@ -22,10 +22,10 @@ class GeoTG_Preferences(bpy.types.AddonPreferences):
         default=os.path.expanduser("~/GeoCache")) # type: ignore
 
     # —————————————————  координаты + плотность  —————————————————
-    lat1 : FloatProperty(name="Lat1 (SW)", default=64.517191)
-    lon1 : FloatProperty(name="Lon1 (SW)", default=59.116188)
-    lat2 : FloatProperty(name="Lat2 (NE)", default=64.513225)
-    lon2 : FloatProperty(name="Lon2 (NE)", default=59.129578)
+    lat1 : FloatProperty(name="Lat1 (SW)", default=53.641353)
+    lon1 : FloatProperty(name="Lon1 (SW)", default=57.967257)
+    lat2 : FloatProperty(name="Lat2 (NE)", default=53.551634)
+    lon2 : FloatProperty(name="Lon2 (NE)", default=58.132830)
     grid_n: IntProperty  (name="Grid N",   default=120, min=30, max=512)
 
     def draw(self, context):
