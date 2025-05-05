@@ -59,10 +59,8 @@ def fetch_dem(lat_c, lon_c, *, side_m=1000, samples=50):
         else:                                             # Arctic / Antarctica
             return list(_fetch_opentopo(dataset, chunk))
 
-    # Используем пул потоков для ускорения загрузки
-    with ThreadPoolExecutor(max_workers=8) as executor:
-        futures = [executor.submit(fetch_chunk, chunk) for chunk in chunks]
-        for future in as_completed(futures):
-            elev.extend(future.result())
+    # Последовательная обработка без потоков
+    for chunk in chunks:
+        elev.extend(fetch_chunk(chunk))
 
     return np.array(elev, dtype=np.float32).reshape(samples, samples)
