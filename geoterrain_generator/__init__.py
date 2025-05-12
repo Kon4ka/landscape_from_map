@@ -18,6 +18,7 @@ from .ui.panel_main            import GEOTG_PT_main_panel
 from .operators.op_build_height  import OP_OT_build_height
 from .operators.op_area_load     import OP_OT_load_area
 from .operators.op_area_displace import OP_OT_displace_area
+from .operators.op_fetch_trees import OP_OT_fetch_trees
 
 import os, sys
 sys.dont_write_bytecode = True 
@@ -33,6 +34,7 @@ classes = (GeoTG_Preferences,
            OP_OT_fetch_tiles,
            OP_OT_load_area,
            OP_OT_displace_area,
+           OP_OT_fetch_trees,
            GEOTG_PT_main_panel)
 
 

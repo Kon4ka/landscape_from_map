@@ -19,3 +19,5 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.separator()
         lay.operator("geotg.load_area")
         lay.operator("geotg.displace_area")
+        lay.separator()
+        lay.operator("geotg.fetch_trees")  # Новая кнопка для загрузки деревьев
