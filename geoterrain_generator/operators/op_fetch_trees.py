@@ -78,7 +78,6 @@ class OP_OT_fetch_trees(bpy.types.Operator):
         self.report({'INFO'}, f"Веса для леса расставлены по grid ({len(polygons)} полигонов)")
         return {'FINISHED'}
 
-# Регистрация оператора
 
 def register():
     bpy.utils.register_class(OP_OT_fetch_trees)

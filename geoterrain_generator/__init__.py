@@ -1,16 +1,57 @@
 bl_info = {
     "name": "Geo-Terrain Generator",
-    "author": "Your Name",
-    "version": (0, 1, 0.002),
+    "author": "Kon4ka",
+    "version": (0, 1, 0, 2),
     "blender": (4, 0, 0),
     "location": "File > Import > Geo-Terrain",
-    "description": "Generate small-area terrain from satellite imagery",
+    "description": "Generate small-area terrain from satellite imagery, including terrain generation, tree placement, and flight path creation.",
+    "doc_url": "https://github.com/Kon4ka/landscape_from_map/tree/main/geoterrain_generator",
+    "tracker_url": "https://github.com/Kon4ka/landscape_from_map/issues",
     "category": "Import-Export",
 }
 
-# ──────────────────────────────────────────────
-# 1.  Импорт нужных классов напрямую
-# ──────────────────────────────────────────────
+# Удаление кэшированных файлов .pyc
+import os
+import sys
+import pathlib
+
+addon_dir = pathlib.Path(__file__).parent
+pycache_dir = addon_dir / "__pycache__"
+
+if pycache_dir.exists():
+    for pyc_file in pycache_dir.glob("*.pyc"):
+        try:
+            pyc_file.unlink()
+        except Exception as e:
+            print(f"Не удалось удалить {pyc_file}: {e}")
+
+# Отладочный принт для перезагрузки аддона
+print("[Geo-Terrain Generator] Аддон перезагружен")
+
+# Перезагрузка всех вложенных модулей
+if "bpy" in locals():
+    import importlib
+    modules = [
+        "geoterrain_generator.operators.op_fetch_tiles",
+        "geoterrain_generator.operators.op_build_height",
+        "geoterrain_generator.operators.op_area_load",
+        "geoterrain_generator.operators.op_area_displace",
+        "geoterrain_generator.operators.op_fetch_trees",
+        "geoterrain_generator.operators.op_create_flight_curve",
+        "geoterrain_generator.ui.panel_main",
+        "geoterrain_generator.ui.panel_settings",
+        "geoterrain_generator.prefs",
+        "geoterrain_generator.core.dem",
+        "geoterrain_generator.core.geo_utils",
+        "geoterrain_generator.core.textures",
+        "geoterrain_generator.core.tiles",
+        "geoterrain_generator.vendor.gdal_wrapper"
+    ]
+    for m in modules:
+        if m in sys.modules:
+            importlib.reload(sys.modules[m])
+
+
 import bpy
 from .prefs                  import GeoTG_Preferences
 from .operators.op_fetch_tiles import OP_OT_fetch_tiles
@@ -19,6 +60,7 @@ from .operators.op_build_height  import OP_OT_build_height
 from .operators.op_area_load     import OP_OT_load_area
 from .operators.op_area_displace import OP_OT_displace_area
 from .operators.op_fetch_trees import OP_OT_fetch_trees
+from .operators.op_create_flight_curve import OP_OT_create_flight_curve
 
 import os, sys
 sys.dont_write_bytecode = True 
@@ -35,13 +77,35 @@ classes = (GeoTG_Preferences,
            OP_OT_load_area,
            OP_OT_displace_area,
            OP_OT_fetch_trees,
+           OP_OT_create_flight_curve,
            GEOTG_PT_main_panel)
 
 
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+    bpy.types.Scene.geotg_flight_curve_type = bpy.props.EnumProperty(
+        name="Тип кривой",
+        description="Тип траектории пролёта",
+        items=[
+            ('STRAIGHT', "Прямолинейный проход", ""),
+            ('CIRCLE', "Круговой облёт", ""),
+            ('SNAKE', "Змейка (серпантин)", ""),
+            ('SPIRAL', "Спираль", ""),
+            ('CUSTOM', "Произвольная кривая", "")
+        ],
+        default='STRAIGHT'
+    )
+    bpy.types.Scene.geotg_flight_height = bpy.props.FloatProperty(
+        name="Высота (м)",
+        description="Высота пролёта камеры в метрах",
+        default=50.0,
+        min=1.0,
+        max=1000.0
+    )
 
 def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
+    del bpy.types.Scene.geotg_flight_curve_type
+    del bpy.types.Scene.geotg_flight_height

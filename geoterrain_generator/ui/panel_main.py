@@ -20,4 +20,10 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.operator("geotg.load_area")
         lay.operator("geotg.displace_area")
         lay.separator()
-        lay.operator("geotg.fetch_trees")  # Новая кнопка для загрузки деревьев
+        lay.operator("geotg.fetch_trees")
+        lay.separator()
+        lay.label(text="Flight curve:")
+        lay.prop(context.scene, "geotg_flight_curve_type", text="Curve type")
+        lay.prop(context.scene, "geotg_flight_height", text="Height (m)")
+        lay.operator("geotg.create_flight_curve", text="Create flight curve")
+

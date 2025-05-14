@@ -1,0 +1,9 @@
+[extension]
+id = "geoterrain_generator"
+name = "Geo-Terrain Generator"
+version = "0.1.0.002"
+author = "Kon4ka"
+blender_version_min = "4.0.0"
+description = "Generate small-area terrain from satellite imagery, including terrain generation, tree placement, and flight path creation."
+doc_url = "https://github.com/Kon4ka/landscape_from_map/tree/main/geoterrain_generator"
+tracker_url = "https://github.com/Kon4ka/landscape_from_map/issues"
