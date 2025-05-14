@@ -70,13 +70,35 @@ class OP_OT_spawn_camera(bpy.types.Operator):
         # Привязка к кривой (Follow Path)
         follow = cam_obj.constraints.new('FOLLOW_PATH')
         follow.target = curve
-        follow.use_curve_follow = False  # Отключаем автоматический поворот по кривой
+        follow.use_curve_follow = True  # Включаем автоматический поворот по кривой
+        # Ограничение поворота камеры (фиксируем X и Y, разрешаем только Z)
+        limit_rot = cam_obj.constraints.new('LIMIT_ROTATION')
+        limit_rot.use_limit_x = True
+        limit_rot.min_x = cam_obj.rotation_euler.x
+        limit_rot.max_x = cam_obj.rotation_euler.x
+        limit_rot.use_limit_y = True
+        limit_rot.min_y = cam_obj.rotation_euler.y
+        limit_rot.max_y = cam_obj.rotation_euler.y
+        limit_rot.use_limit_z = False  # Z свободен
+        limit_rot.owner_space = 'LOCAL'
         # Ставим в начало кривой
         cam_obj.location = (0.0, 0.0, 0.0)
         # Устанавливаем pitch из свойства сцены
         import math
         pitch_deg = context.scene.geotg_camera_pitch if hasattr(context.scene, 'geotg_camera_pitch') else 0.0
         cam_obj.rotation_euler = (math.radians(90 + pitch_deg), 0, 0)
+        # Анимируем движение по кривой (Animate Path)
+        # Вручную задаём ключи для offset_factor
+        if hasattr(curve.data, 'use_path'):
+            curve.data.use_path = True
+            follow = next((c for c in cam_obj.constraints if c.type == 'FOLLOW_PATH'), None)
+            if follow:
+                frame_start = context.scene.frame_start
+                frame_end = context.scene.frame_end
+                follow.offset_factor = 0.0
+                follow.keyframe_insert(data_path="offset_factor", frame=frame_start)
+                follow.offset_factor = 1.0
+                follow.keyframe_insert(data_path="offset_factor", frame=frame_end)
         # Выделить и сделать активной
         bpy.ops.object.select_all(action='DESELECT')
         cam_obj.select_set(True)
