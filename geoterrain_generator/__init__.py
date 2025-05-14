@@ -95,13 +95,26 @@ classes = (GeoTG_Preferences,
            OP_OT_recalc_camera_anim,
            GEOTG_PT_main_panel,
            GEOTG_OT_load_osm_classes,
-           GEOTG_OT_fetch_osm_class)
+           GEOTG_OT_fetch_osm_class,
+           # --- Добавляем новую панель ---
+           # Импортируем ниже, чтобы избежать циклических импортов
+)
 
 
 def register():
     print("[Geo-Terrain Generator] Аддон перезагружен")
+    from .ui.panel_settings import GEOTG_PT_render_outputs
+    from .operators.op_render_outputs import (
+        GEOTG_OT_render_object_index,
+        GEOTG_OT_render_material_index,
+        GEOTG_OT_render_depth,
+    )
     for cls in classes:
         bpy.utils.register_class(cls)
+    bpy.utils.register_class(GEOTG_PT_render_outputs)
+    bpy.utils.register_class(GEOTG_OT_render_object_index)
+    bpy.utils.register_class(GEOTG_OT_render_material_index)
+    bpy.utils.register_class(GEOTG_OT_render_depth)
     bpy.types.Scene.geotg_flight_curve_type = bpy.props.EnumProperty(
         name="Тип кривой",
         description="Тип траектории пролёта",
@@ -164,8 +177,24 @@ def register():
         description="Выбранный OSM класс для загрузки",
         items=osm_classes_items
     )
+    bpy.types.Scene.geotg_render_object_index = bpy.props.BoolProperty(
+        name="Render Object Index", default=False)
+    bpy.types.Scene.geotg_render_material_index = bpy.props.BoolProperty(
+        name="Render Material Index", default=False)
+    bpy.types.Scene.geotg_render_depth = bpy.props.BoolProperty(
+        name="Render Depth", default=False)
 
 def unregister():
+    from .ui.panel_settings import GEOTG_PT_render_outputs
+    from .operators.op_render_outputs import (
+        GEOTG_OT_render_object_index,
+        GEOTG_OT_render_material_index,
+        GEOTG_OT_render_depth,
+    )
+    bpy.utils.unregister_class(GEOTG_PT_render_outputs)
+    bpy.utils.unregister_class(GEOTG_OT_render_object_index)
+    bpy.utils.unregister_class(GEOTG_OT_render_material_index)
+    bpy.utils.unregister_class(GEOTG_OT_render_depth)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
     del bpy.types.Scene.geotg_flight_curve_type
@@ -175,3 +204,6 @@ def unregister():
     del bpy.types.Scene.geotg_camera_pitch
     if hasattr(bpy.types.Scene, 'geotg_selected_osm_class'):
         del bpy.types.Scene.geotg_selected_osm_class
+    del bpy.types.Scene.geotg_render_object_index
+    del bpy.types.Scene.geotg_render_material_index
+    del bpy.types.Scene.geotg_render_depth
