@@ -73,6 +73,7 @@ from .operators.op_area_displace import OP_OT_displace_area
 from .operators.op_fetch_trees import OP_OT_fetch_trees
 from .operators.op_create_flight_curve import OP_OT_create_flight_curve
 from .operators.op_camera_tools import OP_OT_spawn_camera, OP_OT_recalc_camera_anim
+from .operators.op_osm_classes import GEOTG_OT_load_osm_classes, GEOTG_OT_fetch_osm_class
 
 import os, sys
 sys.dont_write_bytecode = True 
@@ -92,7 +93,9 @@ classes = (GeoTG_Preferences,
            OP_OT_create_flight_curve,
            OP_OT_spawn_camera,
            OP_OT_recalc_camera_anim,
-           GEOTG_PT_main_panel)
+           GEOTG_PT_main_panel,
+           GEOTG_OT_load_osm_classes,
+           GEOTG_OT_fetch_osm_class)
 
 
 def register():
@@ -142,6 +145,25 @@ def register():
         min=-90.0,
         max=90.0
     )
+    # Свойства для OSM классов
+    bpy.types.Scene.geotg_selected_osm_class = bpy.props.StringProperty(
+        name="OSM Class",
+        description="Выбранный OSM класс для загрузки",
+        default=""
+    )
+    # geotg_osm_classes хранится как список в scene['geotg_osm_classes']
+    # Для EnumProperty используем динамический items
+    def osm_classes_items(self, context):
+        items = []
+        classes = context.scene.get('geotg_osm_classes', [])
+        for i, c in enumerate(classes):
+            items.append((c, c, "", i))
+        return items or [("", "(нет)", "", 0)]
+    bpy.types.Scene.geotg_selected_osm_class = bpy.props.EnumProperty(
+        name="OSM Class",
+        description="Выбранный OSM класс для загрузки",
+        items=osm_classes_items
+    )
 
 def unregister():
     for cls in reversed(classes):
@@ -151,3 +173,5 @@ def unregister():
     del bpy.types.Scene.geotg_camera_preset
     del bpy.types.Scene.geotg_camera_frames
     del bpy.types.Scene.geotg_camera_pitch
+    if hasattr(bpy.types.Scene, 'geotg_selected_osm_class'):
+        del bpy.types.Scene.geotg_selected_osm_class

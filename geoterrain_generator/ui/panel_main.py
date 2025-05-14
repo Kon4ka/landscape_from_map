@@ -20,6 +20,11 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.operator("geotg.load_area")
         lay.operator("geotg.displace_area")
         lay.separator()
+        # --- Новый блок: загрузка классов OSM ---
+        lay.operator("geotg.load_osm_classes", text="Load class info")
+        lay.prop(context.scene, "geotg_selected_osm_class", text="OSM Class")
+        lay.operator("geotg.fetch_osm_class", text="Load GeoJSON Class")
+        lay.separator()
         lay.operator("geotg.fetch_trees")
         lay.separator()
         lay.label(text="Flight curve:")
