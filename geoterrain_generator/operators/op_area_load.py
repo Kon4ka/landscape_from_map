@@ -23,6 +23,7 @@ class OP_OT_load_area(bpy.types.Operator):
         urllib.request.urlretrieve(url, out_img)
 
         img = bpy.data.images.load(out_img, check_existing=True)
+        img.reload()  # Обновляем изображение с диска, если оно уже было загружено
         img.name = "GeoTG_Ortho"
 
         # ─ реальные размеры участка (в метрах) ──────────────────────────────

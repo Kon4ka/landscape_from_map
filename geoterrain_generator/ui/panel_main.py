@@ -27,3 +27,18 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.prop(context.scene, "geotg_flight_height", text="Height (m)")
         lay.operator("geotg.create_flight_curve", text="Create flight curve")
 
+        # --- Camera animation block ---
+        cam_anim_box = lay.box()
+        cam_anim_box.label(text="Camera Animation:")
+        cam_anim_box.prop(context.scene, "geotg_camera_frames", text="Frames")
+        cam_anim_box.operator("geotg.recalc_camera_anim", text="Recalculate")
+
+        # --- Camera tools block (only if curve selected) ---
+        obj = context.active_object
+        if obj and obj.type == 'CURVE':
+            cam_tools_box = lay.box()
+            cam_tools_box.label(text="Camera Tools:")
+            cam_tools_box.prop(context.scene, "geotg_camera_preset", text="Camera preset")
+            cam_tools_box.prop(context.scene, "geotg_camera_pitch", text="Pitch (deg)")
+            cam_tools_box.operator("geotg.spawn_camera", text="Spawn Camera")
+
