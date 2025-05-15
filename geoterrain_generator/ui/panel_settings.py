@@ -10,13 +10,13 @@ class GEOTG_PT_render_outputs(bpy.types.Panel):
     def draw(self, context):
         lay = self.layout
         box = lay.box()
-        box.prop(context.scene, "geotg_render_object_index", text="Рендерить Object Index")
+        box.prop(context.scene, "geotg_render_object_index", text="Render Object Index")
         if context.scene.geotg_render_object_index:
             box.operator("geotg.render_object_index", text="Render Object Index")
-        box.prop(context.scene, "geotg_render_material_index", text="Рендерить Material Index")
+        box.prop(context.scene, "geotg_render_material_index", text="Render Material Index")
         if context.scene.geotg_render_material_index:
             box.operator("geotg.render_material_index", text="Render Material Index")
-        box.prop(context.scene, "geotg_render_depth", text="Рендерить depth")
+        box.prop(context.scene, "geotg_render_depth", text="Render Depth")
         if context.scene.geotg_render_depth:
             box.operator("geotg.render_depth", text="Render Depth")
 
