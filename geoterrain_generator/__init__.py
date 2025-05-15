@@ -114,27 +114,27 @@ def register():
     bpy.utils.register_class(GEOTG_OT_render_material_index)
     bpy.utils.register_class(GEOTG_OT_render_depth)
     bpy.types.Scene.geotg_flight_curve_type = bpy.props.EnumProperty(
-        name="Тип кривой",
-        description="Тип траектории пролёта",
+        name="Curve Type",
+        description="Type of flight trajectory",
         items=[
-            ('STRAIGHT', "Прямолинейный проход", ""),
-            ('CIRCLE', "Круговой облёт", ""),
-            ('SNAKE', "Змейка (серпантин)", ""),
-            ('SPIRAL', "Спираль", ""),
-            ('CUSTOM', "Произвольная кривая", "")
+            ('STRAIGHT', "Straight Path", ""),
+            ('CIRCLE', "Circular Path", ""),
+            ('SNAKE', "Snake (serpentine)", ""),
+            ('SPIRAL', "Spiral", ""),
+            ('CUSTOM', "Custom Curve", "")
         ],
         default='STRAIGHT'
     )
     bpy.types.Scene.geotg_flight_height = bpy.props.FloatProperty(
-        name="Высота (м)",
-        description="Высота пролёта камеры в метрах",
+        name="Flight Height (m)",
+        description="Camera flight height in meters",
         default=50.0,
         min=1.0,
         max=1000.0
     )
     bpy.types.Scene.geotg_camera_preset = bpy.props.EnumProperty(
         name="Camera Preset",
-        description="Тип камеры для пролёта",
+        description="Type of camera for the flight",
         items=[
             ("DJI_X7", "DJI X7 (APS-C)", ""),
             ("SONY_RX0", "Sony RX0 II (1.0\")", ""),
@@ -144,14 +144,14 @@ def register():
     )
     bpy.types.Scene.geotg_camera_frames = bpy.props.IntProperty(
         name="Frames",
-        description="Количество кадров анимации",
+        description="Number of animation frames",
         default=200,
         min=10,
         max=10000
     )
     bpy.types.Scene.geotg_camera_pitch = bpy.props.FloatProperty(
         name="Pitch (deg)",
-        description="Угол наклона камеры (градусы от вертикали)",
+        description="Camera tilt angle (degrees from vertical)",
         default=0.0,
         min=-90.0,
         max=90.0
@@ -159,7 +159,7 @@ def register():
     # Свойства для OSM классов
     bpy.types.Scene.geotg_selected_osm_class = bpy.props.StringProperty(
         name="OSM Class",
-        description="Выбранный OSM класс для загрузки",
+        description="Selected OSM class for loading",
         default=""
     )
     # geotg_osm_classes хранится как список в scene['geotg_osm_classes']

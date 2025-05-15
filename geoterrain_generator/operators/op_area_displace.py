@@ -9,6 +9,7 @@ ADDON_ID = __name__.split('.')[0]
 class OP_OT_displace_area(bpy.types.Operator):
     bl_idname  = "geotg.displace_area"
     bl_label   = "Displace (apply DEM)"
+    bl_description = "Apply DEM to displace the terrain"
     bl_options = {'REGISTER', 'UNDO'}
 
     exaggeration : FloatProperty(
