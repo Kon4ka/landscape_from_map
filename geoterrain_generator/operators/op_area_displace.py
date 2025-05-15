@@ -14,11 +14,11 @@ class OP_OT_displace_area(bpy.types.Operator):
     exaggeration : FloatProperty(
         name="Z exaggeration",
         default=2.5, min=0.1, max=20.0,
-        description="Во сколько раз усиливать рельеф")
+        description="How much to exaggerate the relief")
 
     center_to_zero : BoolProperty(
-        name="Уровень моря в ноль Z", default=True,
-        description="Минимальная отметка DEM будет на высоте 0")
+        name="Sea level to zero Z", default=True,
+        description="The minimum DEM mark will be at height 0")
 
     def execute(self, context):
         obj = context.active_object

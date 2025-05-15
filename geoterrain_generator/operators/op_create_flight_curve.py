@@ -8,8 +8,8 @@ BLENDER_SCALE = 100.0  # 1 BU = 100 метров, как в op_build_height.py
 
 class OP_OT_create_flight_curve(bpy.types.Operator):
     bl_idname = "geotg.create_flight_curve"
-    bl_label = "Создать кривую пролёта"
-    bl_description = "Создаёт кривую для пролёта камеры на заданной высоте"
+    bl_label = "Create Flight Curve"
+    bl_description = "Creates a flight curve at a specified height"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -45,7 +45,7 @@ class OP_OT_create_flight_curve(bpy.types.Operator):
         lon_c = 0.5 * (lon1 + lon2)
         # Проверка на валидность координат (например, если пользователь не вводил значения)
         if any(abs(x) < 1e-6 for x in [lat1, lat2, lon1, lon2]):
-            self.report({'ERROR'}, "Не заданы координаты участка. Введите координаты в панели аддона.")
+            self.report({'ERROR'}, "Coordinates not set. Enter coordinates in the addon panel.")
             return {'CANCELLED'}
         # Размер участка в метрах (аналогично op_area_load)
         meters_lat = 111_320

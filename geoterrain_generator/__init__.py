@@ -96,8 +96,6 @@ classes = (GeoTG_Preferences,
            GEOTG_PT_main_panel,
            GEOTG_OT_load_osm_classes,
            GEOTG_OT_fetch_osm_class,
-           # --- Добавляем новую панель ---
-           # Импортируем ниже, чтобы избежать циклических импортов
 )
 
 
@@ -174,7 +172,7 @@ def register():
         return items or [("", "(нет)", "", 0)]
     bpy.types.Scene.geotg_selected_osm_class = bpy.props.EnumProperty(
         name="OSM Class",
-        description="Выбранный OSM класс для загрузки",
+        description="Selected OSM class for loading",
         items=osm_classes_items
     )
     bpy.types.Scene.geotg_render_object_index = bpy.props.BoolProperty(

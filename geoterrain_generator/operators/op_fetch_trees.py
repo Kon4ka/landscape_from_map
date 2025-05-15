@@ -7,7 +7,7 @@ ADDON_ID = __name__.split('.')[0]
 class OP_OT_fetch_trees(bpy.types.Operator):
     bl_idname = "geotg.fetch_trees"
     bl_label = "Load GeoJson"
-    bl_description = "Загрузить и разместить данные о деревьях для выбранного прямоугольника"
+    bl_description = "Load and place tree data for the selected rectangle"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -16,7 +16,7 @@ class OP_OT_fetch_trees(bpy.types.Operator):
         lon1, lon2 = min(prefs.lon1, prefs.lon2), max(prefs.lon1, prefs.lon2)
         bbox = (lat1, lon1, lat2, lon2)
         bbox_str = f"{lat1},{lon1},{lat2},{lon2}"
-        # По умолчанию класс для деревьев
+        # By default, class for trees
         key, value = "landuse", "forest"
         overpass_url = (
             "https://overpass-api.de/api/interpreter?data="
@@ -32,7 +32,7 @@ class OP_OT_fetch_trees(bpy.types.Operator):
             return {'CANCELLED'}
         obj = context.active_object
         if not obj or obj.type != 'MESH' or not obj.name.startswith('GeoTerrainGrid'):
-            self.report({'ERROR'}, "Выберите grid-объект для расстановки весов")
+            self.report({'ERROR'}, "Select a grid object to set weights")
             return {'CANCELLED'}
         mesh = obj.data
         vgroup = obj.vertex_groups.get('forest') or obj.vertex_groups.new(name='forest')
@@ -57,7 +57,7 @@ class OP_OT_fetch_trees(bpy.types.Operator):
                 lat = lat1
             inside = any(point_in_polygon(lon, lat, poly) for poly in polygons)
             vgroup.add([v.index], 1.0 if inside else 0.0, 'REPLACE')
-        self.report({'INFO'}, f"Веса для леса расставлены по grid ({len(polygons)} полигонов)")
+        self.report({'INFO'}, f"Weights for forest set on grid ({len(polygons)} polygons)")
         return {'FINISHED'}
 
 

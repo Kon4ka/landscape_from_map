@@ -17,7 +17,7 @@ def extract_osm_classes(geojson):
 class GEOTG_OT_load_osm_classes(bpy.types.Operator):
     bl_idname = "geotg.load_osm_classes"
     bl_label = "Load OSM Classes"
-    bl_description = "Загрузить список классов OSM для выбранного bbox"
+    bl_description = "Load the list of OSM classes for the selected bbox"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -44,13 +44,13 @@ class GEOTG_OT_load_osm_classes(bpy.types.Operator):
         scene['geotg_osm_classes'] = classes
         scene.geotg_selected_osm_class = classes[0] if classes else ""
 
-        self.report({'INFO'}, f"Найдено классов: {len(classes)}")
+        self.report({'INFO'}, f"Found classes: {len(classes)}")
         return {'FINISHED'}
 
 class GEOTG_OT_fetch_osm_class(bpy.types.Operator):
     bl_idname = "geotg.fetch_osm_class"
     bl_label = "Load GeoJSON Class"
-    bl_description = "Загрузить и расставить веса для выбранного класса OSM"
+    bl_description = "Load and set weights for the selected OSM class"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -61,7 +61,7 @@ class GEOTG_OT_fetch_osm_class(bpy.types.Operator):
         selected = context.scene.geotg_selected_osm_class
 
         if not selected or '=' not in selected:
-            self.report({'ERROR'}, "Не выбран класс OSM")
+            self.report({'ERROR'}, "No OSM class selected")
             return {'CANCELLED'}
 
         key, value = selected.split('=', 1)
@@ -82,7 +82,7 @@ class GEOTG_OT_fetch_osm_class(bpy.types.Operator):
 
         obj = context.active_object
         if not obj or obj.type != 'MESH' or not obj.name.startswith('GeoTerrainGrid'):
-            self.report({'ERROR'}, "Выберите grid-объект для расстановки весов")
+            self.report({'ERROR'}, "Select a grid object to set weights")
             return {'CANCELLED'}
 
         mesh = obj.data
@@ -111,5 +111,5 @@ class GEOTG_OT_fetch_osm_class(bpy.types.Operator):
             inside = any(point_in_polygon(lon, lat, poly) for poly in polygons)
             vgroup.add([v.index], 1.0 if inside else 0.0, 'REPLACE')
 
-        self.report({'INFO'}, f"Веса для '{value}' расставлены по grid ({len(polygons)} полигонов)")
+        self.report({'INFO'}, f"Weights for '{value}' set on grid ({len(polygons)} polygons)")
         return {'FINISHED'}

@@ -39,7 +39,7 @@ CAMERA_PRESET_PARAMS = {
 class OP_OT_spawn_camera(bpy.types.Operator):
     bl_idname = "geotg.spawn_camera"
     bl_label = "Spawn Camera"
-    bl_description = "Создать камеру в начале траектории с выбранным пресетом"
+    bl_description = "Create a camera at the start of the trajectory with the selected preset"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -47,7 +47,7 @@ class OP_OT_spawn_camera(bpy.types.Operator):
         params = CAMERA_PRESET_PARAMS.get(preset, CAMERA_PRESET_PARAMS["DJI_X7"])
         curve = context.active_object
         if not curve or curve.type != 'CURVE':
-            self.report({'ERROR'}, "Выделите кривую траектории!")
+            self.report({'ERROR'}, "Select a trajectory curve!")
             return {'CANCELLED'}
         # Создать камеру
         cam_data = bpy.data.cameras.new("GeoTG_Camera")
@@ -103,5 +103,5 @@ class OP_OT_spawn_camera(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
         cam_obj.select_set(True)
         context.view_layer.objects.active = cam_obj
-        self.report({'INFO'}, f"Камера создана и привязана к кривой ({preset}), рендер: {int(res_x//4)}x{int(res_y//4)} @200%")
+        self.report({'INFO'}, f"Camera created and linked to curve ({preset}), render: {int(res_x//4)}x{int(res_y//4)} @200%")
         return {'FINISHED'}

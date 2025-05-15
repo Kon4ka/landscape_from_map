@@ -17,10 +17,10 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.prop(p, "lat2"); lay.prop(p, "lon2")
         lay.prop(p, "grid_n")
         lay.separator()
-        lay.operator("geotg.load_area")
-        lay.operator("geotg.displace_area")
+        lay.operator("geotg.load_area", text="Load Area")
+        lay.operator("geotg.displace_area", text="Displace Area")
         lay.separator()
-        # --- Новый блок: загрузка классов OSM ---
+        # --- New block: load OSM classes ---
         lay.operator("geotg.load_osm_classes", text="Load class info")
         lay.prop(context.scene, "geotg_selected_osm_class", text="OSM Class")
         lay.operator("geotg.fetch_osm_class", text="Load GeoJSON Class")
