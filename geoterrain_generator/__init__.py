@@ -73,7 +73,9 @@ from .operators.op_area_displace import OP_OT_displace_area
 from .operators.op_fetch_trees import OP_OT_fetch_trees
 from .operators.op_create_flight_curve import OP_OT_create_flight_curve
 from .operators.op_camera_tools import OP_OT_spawn_camera, OP_OT_recalc_camera_anim
-from .operators.op_osm_classes import GEOTG_OT_load_osm_classes, GEOTG_OT_fetch_osm_class
+from .operators.op_osm_load_classes import GEOTG_OT_load_osm_classes
+from .operators.op_osm_fetch_class import GEOTG_OT_fetch_osm_class
+from .operators.op_osm_roads_rivers import GEOTG_OT_fetch_osm_roads_rivers
 
 import os, sys
 sys.dont_write_bytecode = True 
@@ -96,6 +98,7 @@ classes = (GeoTG_Preferences,
            GEOTG_PT_main_panel,
            GEOTG_OT_load_osm_classes,
            GEOTG_OT_fetch_osm_class,
+           GEOTG_OT_fetch_osm_roads_rivers,
 )
 
 

@@ -15,7 +15,7 @@ class OP_OT_fetch_tiles(bpy.types.Operator):
         prefs = context.preferences.addons[ADDON_ID].preferences
         cache_dir = bpy.path.abspath(prefs.cache_dir)
         try:
-            os.makedirs(cache_dir, exist_ok=True)     # ← может бросить PermissionError
+            os.makedirs(cache_dir, exist_ok=True)   
         except PermissionError as e:
             self.report({'ERROR'},
                         f"No write access to '{cache_dir}'. "
@@ -33,7 +33,7 @@ class OP_OT_fetch_tiles(bpy.types.Operator):
             return {'CANCELLED'}
 
         img = bpy.data.images.load(out_file, check_existing=True)
-        img.name = "GeoTG_Ortho"          # ← добавьте
+        img.name = "GeoTG_Ortho"         
         context.scene["geotg_lat"] = self.lat
         context.scene["geotg_lon"] = self.lon
         context.scene["geotg_ratio"] = img.size[0]/img.size[1]
