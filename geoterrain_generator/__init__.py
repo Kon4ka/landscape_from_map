@@ -76,6 +76,7 @@ from .operators.op_camera_tools import OP_OT_spawn_camera, OP_OT_recalc_camera_a
 from .operators.op_osm_load_classes import GEOTG_OT_load_osm_classes
 from .operators.op_osm_fetch_class import GEOTG_OT_fetch_osm_class
 from .operators.op_osm_roads_rivers import GEOTG_OT_fetch_osm_roads_rivers
+from .operators.op_import_dem_geotiff import OP_OT_import_dem_geotiff
 
 import os, sys
 sys.dont_write_bytecode = True 
@@ -99,6 +100,7 @@ classes = (GeoTG_Preferences,
            GEOTG_OT_load_osm_classes,
            GEOTG_OT_fetch_osm_class,
            GEOTG_OT_fetch_osm_roads_rivers,
+           OP_OT_import_dem_geotiff,
 )
 
 
@@ -184,6 +186,21 @@ def register():
         name="Render Material Index", default=False)
     bpy.types.Scene.geotg_render_depth = bpy.props.BoolProperty(
         name="Render Depth", default=False)
+    bpy.types.Scene.geotg_dem_source = bpy.props.EnumProperty(
+        name="DEM Source",
+        description="Source of elevation data",
+        items=[
+            ("API", "Online API", "Use online elevation API"),
+            ("GEOTIFF", "GeoTIFF file", "Use local GeoTIFF file")
+        ],
+        default="API"
+    )
+    bpy.types.Scene.geotg_dem_geotiff_path = bpy.props.StringProperty(
+        name="GeoTIFF Path",
+        description="Path to GeoTIFF DEM file",
+        subtype='FILE_PATH',
+        default=""
+    )
 
 def unregister():
     from .ui.panel_settings import GEOTG_PT_render_outputs
@@ -208,3 +225,5 @@ def unregister():
     del bpy.types.Scene.geotg_render_object_index
     del bpy.types.Scene.geotg_render_material_index
     del bpy.types.Scene.geotg_render_depth
+    del bpy.types.Scene.geotg_dem_source
+    del bpy.types.Scene.geotg_dem_geotiff_path

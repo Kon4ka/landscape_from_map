@@ -16,9 +16,14 @@ class GEOTG_PT_main_panel(bpy.types.Panel):
         lay.label(text="Lat/Lon 2 (NE):")
         lay.prop(p, "lat2"); lay.prop(p, "lon2")
         lay.prop(p, "grid_n")
-        lay.separator()
         lay.operator("geotg.load_area", text="Load Area")
-        lay.operator("geotg.displace_area", text="Displace Area")
+        lay.separator()
+        lay.prop(context.scene, "geotg_dem_source", text="DEM Source")
+        if context.scene.geotg_dem_source == 'GEOTIFF':
+            lay.prop(context.scene, "geotg_dem_geotiff_path", text="GeoTIFF File")
+            lay.operator("geotg.import_dem_geotiff", text="Import DEM from GeoTIFF")
+        if context.scene.geotg_dem_source == 'API':
+            lay.operator("geotg.displace_area", text="Displace Area")
         lay.separator()
         # --- New block: load OSM classes ---
         lay.operator("geotg.load_osm_classes", text="Load class info")
